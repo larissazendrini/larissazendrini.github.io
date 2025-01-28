@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(JogoDaVelhaApp());
+}
+
+class JogoDaVelhaApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: JogoDaVelha(),
+    );
+  }
+}
+
+class JogoDaVelha extends StatefulWidget {
+  @override
+  _JogoDaVelhaState createState() => _JogoDaVelhaState();
+}
+
+class _JogoDaVelhaState extends State<JogoDaVelha> {
+  List<String> tabuleiro = ['', '', '', '', '', '', '', '', ''];
+  String jogadorAtual = 'X';
+  String vencedor = '';
+
+  void jogada(int index) {
+    if (tabuleiro[index] == '' && vencedor == '') {
+      setState(() {
+        tabuleiro[index] = jogadorAtual;
+        vencedor = verificaVencedor();
+        jogadorAtual = (jogadorAtual == 'X') ? 'O' : 'X';
+      });
+    }
+  }
+
+  String verificaVencedor() {
+    List<List<int>> combinacoes = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+
+    for (var combinacao in combinacoes) {
+      if (tabuleiro[combinacao[0]] != '' &&
+          tabuleiro[combinacao[0]] == tabuleiro[combinacao[1]] &&
+          tabuleiro[combinacao[0]] == tabuleiro[combinacao[2]]) {
+        return tabuleiro[combinacao[0]]; // Retorna 'X' ou 'O'
+      }
+    }
+    return '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Jogo da Velha')),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            vencedor != '' ? 'Vencedor: $vencedor' : 'Jogador: $jogadorAtual',
+            style: TextStyle(fontSize: 24),
+          ),
+          SizedBox(height: 20),
+          GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+            ),
+            itemCount: 9,
+            itemBuilder: (context, index) {
+              return ElevatedButton(
+                onPressed: () => jogada(index),
+                child: Text(
+                  tabuleiro[index],
+                  style: TextStyle(fontSize: 50),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
