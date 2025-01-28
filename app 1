@@ -1,0 +1,189 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Programa Layout',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const ResponsiveLayout(),
+    );
+  }
+}
+
+class ResponsiveLayout extends StatelessWidget {
+  const ResponsiveLayout({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.purple,
+        title: const Text(
+          'Programa Layout',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 600) {
+            // Layout para telas menores (Android ou Mobile)
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Layout Superior
+                Container(
+                  color: Colors.purple.shade100,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
+                    'Layout Superior',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                // Elemento Centralizado
+                Expanded(
+                  child: Center(
+                    child: Container(
+                      width: 200,
+                      height: 300,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 5,
+                            offset: Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Meu Aplicativo',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Layout Inferior
+                Container(
+                  color: Colors.blue,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
+                    'Layout Inferior',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            // Layout para telas maiores (Tablet ou Desktop)
+            return Column(
+              children: [
+                // Layout Superior
+                Container(
+                  color: Colors.yellow,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
+                    'Layout Superior',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+
+                // Conteúdo Principal
+                Expanded(
+                  child: Row(
+                    children: [
+                      // Primeira Coluna
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          color: Colors.white,
+                          child: const Center(
+                            child: Text(
+                              '',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Segunda Coluna
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          color: Colors.redAccent,
+                          child: const Center(
+                            child: Text(
+                              'Segunda Coluna',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Terceira Coluna
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          color: Colors.red,
+                          child: const Center(
+                            child: Text(
+                              'Terceira Coluna',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Layout Inferior
+                Container(
+                  color: Colors.blue,
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(8.0),
+                  child: const Text(
+                    'Layout Inferior',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
+
+      // Botão Flutuante
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: Colors.purple,
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
