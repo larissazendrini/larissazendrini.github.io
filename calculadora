@@ -1,0 +1,159 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const CalculadoraApp());
+}
+
+class CalculadoraApp extends StatelessWidget {
+  const CalculadoraApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Calculadora Responsiva',
+      home: const CalculadoraHome(),
+    );
+  }
+}
+
+class CalculadoraHome extends StatefulWidget {
+  const CalculadoraHome({Key? key}) : super(key: key);
+
+  @override
+  _CalculadoraHomeState createState() => _CalculadoraHomeState();
+}
+
+class _CalculadoraHomeState extends State<CalculadoraHome> {
+  String _output = "0";
+  String _currentValue = "";
+  String _operator = "";
+  double? _num1;
+  double? _num2;
+
+  void _buttonPressed(String value) {
+    setState(() {
+      if (value == "C") {
+        _output = "0";
+        _currentValue = "";
+        _operator = "";
+        _num1 = null;
+        _num2 = null;
+      } else if (value == "+" || value == "-" || value == "*" || value == "/") {
+        _operator = value;
+        _num1 = double.tryParse(_currentValue);
+        _currentValue = "";
+      } else if (value == "=") {
+        _num2 = double.tryParse(_currentValue);
+        if (_num1 != null && _num2 != null) {
+          switch (_operator) {
+            case "+":
+              _output = (_num1! + _num2!).toString();
+              break;
+            case "-":
+              _output = (_num1! - _num2!).toString();
+              break;
+            case "*":
+              _output = (_num1! * _num2!).toString();
+              break;
+            case "/":
+              _output = _num2 != 0 ? (_num1! / _num2!).toString() : "Erro";
+              break;
+          }
+        }
+        _currentValue = _output;
+        _operator = "";
+      } else {
+        _currentValue += value;
+        _output = _currentValue;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Calculadora Responsiva"),
+        backgroundColor: Colors.blue,
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return constraints.maxWidth < 600
+              ? _buildMobileLayout()
+              : _buildDesktopLayout();
+        },
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout() {
+    return Column(
+      children: [
+        Expanded(
+          child: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.all(24.0),
+            child: Text(
+              _output,
+              style: const TextStyle(fontSize: 48.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        _buildButtonGrid(),
+      ],
+    );
+  }
+
+  Widget _buildDesktopLayout() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.all(24.0),
+            child: Text(
+              _output,
+              style: const TextStyle(fontSize: 48.0, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        Expanded(
+          child: _buildButtonGrid(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildButtonGrid() {
+    return GridView.count(
+      crossAxisCount: 4,
+      shrinkWrap: true,
+      children: [
+        ...["7", "8", "9", "/"].map(_buildButton),
+        ...["4", "5", "6", "*"].map(_buildButton),
+        ...["1", "2", "3", "-"].map(_buildButton),
+        ...["C", "0", "=", "+"].map(_buildButton),
+      ],
+    );
+  }
+
+  Widget _buildButton(String value) {
+    return GestureDetector(
+      onTap: () => _buttonPressed(value),
+      child: Container(
+        margin: const EdgeInsets.all(4.0),
+        decoration: BoxDecoration(
+          color: Colors.blue.shade100,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Center(
+          child: Text(
+            value,
+            style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+}
